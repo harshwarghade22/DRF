@@ -5,10 +5,10 @@ from .models import Student
 from .serializers import StudentSerializer 
 
 # Create your views here.
-@api_view(['GET','POST','PUT','DELETE'])
-def student_api(request):
+@api_view(['GET','POST','PUT','DELETE','PATCH'])
+def student_api(request,pk=None):
     if request.method == 'GET':
-        id=request.data.get('id')
+        id=pk
         if id is not None:
             stu=Student.objects.get(id=id)
             serializer=StudentSerializer(stu)
@@ -25,8 +25,8 @@ def student_api(request):
         return Response(serializer.errors,status=400)
     
     if request.method == 'PUT':
-        id=request.data.get('id')
-        stu=Student.objects.get(id=id)
+        id=pk
+        stu=Student.objects.get(pk=id)
         serializer=StudentSerializer(stu,data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -34,7 +34,7 @@ def student_api(request):
         return Response(serializer.errors,status=400)
     
     if request.method == 'DELETE':
-        id=request.data.get('id')
-        stu=Student.objects.get(id=id)
+        id=pk
+        stu=Student.objects.get(pk=id)
         stu.delete()
         return Response({'msg': 'Student deleted'})
